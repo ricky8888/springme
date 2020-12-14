@@ -1,0 +1,2 @@
+insert into task (name, content, create_time, update_time) values ('语文作业', '第三课 生字; 课后作文', now(), now());
+insert into task (name, content, create_time, update_time) values ('English exercise', 'Unit 4 listen and speak', now(), now());
