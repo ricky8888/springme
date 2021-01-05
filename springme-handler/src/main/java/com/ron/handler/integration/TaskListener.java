@@ -1,5 +1,6 @@
 package com.ron.handler.integration;
 
+import com.ron.handler.model.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,6 +10,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import com.ron.handler.repository.TaskRedisRepository;
 
 @Component
 @Slf4j
@@ -23,6 +25,9 @@ public class TaskListener {
     private String taskHandler;
     //private String barista;
     //todo redis integration
+
+    @Autowired
+    private TaskRedisRepository redisRepository;
 
     @StreamListener(Producer.NEW_TASKS)
     public void processNewOrder(Long id) {
@@ -43,6 +48,7 @@ public class TaskListener {
         System.out.println("Hi Ron - begin to send msg of finishedTasks from " + taskHandler);
 
         //Todo integrate with redis
+        redisRepository.add(Task.builder().id(id).name(id.toString()).build());
         finishedTasksMessageChannel.send(MessageBuilder.withPayload(id).build());
 
         System.out.println("Hi Ron - sent msg of finishedTasks from " + taskHandler);
